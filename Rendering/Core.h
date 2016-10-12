@@ -3,17 +3,7 @@
 
 #include "D3DAPIs.h"
 #include "../OtherUtility/CWEUtility.h"
-
-
-
-
-// =================== 簡易インターフェイスファクトリ関数 ===============================
-
-namespace factory
-{
-// スワップチェイン
-}
-
+#include "FwDeclear.h"
 
 
 // D3Dインターフェイスのラッパー用基底クラス
@@ -42,11 +32,6 @@ private:
 bool DeviceLost();
 
 
-
-class Window;
-class Texture2D;
-
-
 // スワップチェイン
 class SwapChain : public D3DWrapper<IDXGISwapChain>
 {
@@ -63,3 +48,24 @@ public:
 	Texture2D&& GetBuffer() const;
 
 };
+
+
+
+// =================== インターフェイスファクトリ関数 ===============================
+
+namespace factory
+{
+// スワップチェイン
+SwapChain&& CreateSwapChain();
+
+// 頂点シェーダー
+VertexShader&& CreateVertexShader();
+
+// ジオメトリシェーダー
+GeometryShader&& CreateGeometryShader();
+
+// ピクセルシェーダー
+PixelShader&& CreatePixelShader();
+
+
+}//factory

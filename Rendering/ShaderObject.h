@@ -64,7 +64,7 @@ private:
 
 
 // 頂点シェーダオブジェクト
-struct VS
+struct VertexShader
 {
 public:
 	// 入力レイアウト&頂点シェーダオブジェクトの作成
@@ -79,7 +79,7 @@ private:
 
 
 // ジオメトリシェーダオブジェクト
-struct GS
+struct GeometryShader
 {
 public:
 	// ジオメトリシェーダオブジェクトの作成
@@ -92,7 +92,7 @@ private:
 
 
 // ピクセルシェーダオブジェクト
-struct PS
+struct PixelShader
 {
 public:
 	// ピクセルシェーダオブジェクトの作成
