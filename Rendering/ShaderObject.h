@@ -194,11 +194,11 @@ public:
 
 
 
-// 深度/ステンシルビュー記述オブジェクト
+// 深度ステンシルビュー記述オブジェクト
 typedef D3D11_DEPTH_STENCIL_VIEW_DESC DepthStencilViewDesc;
 
 
-// 深度/ステンシルビューオブジェクト
+// 深度ステンシルビューオブジェクト
 struct DepthStencilView
 {
 public:

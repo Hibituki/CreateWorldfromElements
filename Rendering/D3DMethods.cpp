@@ -72,18 +72,6 @@ bool DeviceLost()
 
 // ======================= SwapChain ================================
 
-// デフォルトコンストラクタ
-SwapChain::SwapChain()
-{
-
-}
-
-// 出力ウィンドウを指定して生成
-SwapChain::SwapChain(const Window& target)
-{
-	SetProperty(target);
-}
-
 // デフォルトデストラクタ
 SwapChain::~SwapChain()
 {
@@ -94,10 +82,17 @@ SwapChain::~SwapChain()
 }
 
 
-// 各種初期設定
+// ムーブ代入演算子
+SwapChain& SwapChain::operator=(SwapChain&& rhs)
+{
+	RawData().swap(rhs.RawData());
+}
+
+
+// これいらないけど、デフォルト作成時の参考にちょっと取って置きます。
+// ようようするに、次の人柱
 bool SwapChain::SetProperty(const Window& target)
 {
-	if(RenderingPre()) {return false;}
 
 	IDXGISwapChain* pSwapChain =nullptr;
 	DXGI_SWAP_CHAIN_DESC desc{};
@@ -145,8 +140,27 @@ Texture2D&& SwapChain::GetBuffer() const
 		return Texture2D();
 	}
 
-	return Texture2D(p);
+	return Texture2D(p));
 }
+
+
+
+// ======================= ファクトリ関数 =============================
+namespace factory
+{
+
+// スワップチェイン
+SwapChain&& CreateSwapChain(const SwapChainDesc& desc)
+{
+	if(RenderingPre()) {return;}
+	IDXGISwapChain* p{};
+	g_pFactory->CreateSwapChain(g_pDevice.get(), &static_cast<DXGI_SWAP_CHAIN_DESC>(desc), &p);
+	SwapChain result;
+	result.SetRawData(p);
+	return std::move(result);
+}
+
+}//factory
 
 
 
