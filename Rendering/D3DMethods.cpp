@@ -140,14 +140,12 @@ Texture2D&& SwapChain::GetBuffer() const
 		return Texture2D();
 	}
 
-	return Texture2D(p));
+	return Texture2D(p);
 }
 
 
 
 // ======================= ファクトリ関数 =============================
-namespace factory
-{
 
 // スワップチェイン
 SwapChain&& CreateSwapChain(const SwapChainDesc& desc)
@@ -157,10 +155,60 @@ SwapChain&& CreateSwapChain(const SwapChainDesc& desc)
 	g_pFactory->CreateSwapChain(g_pDevice.get(), &static_cast<DXGI_SWAP_CHAIN_DESC>(desc), &p);
 	SwapChain result;
 	result.SetRawData(p);
-	return std::move(result);
+	return ::std::move(result);
 }
 
-}//factory
+
+#include <fstream>
+// 頂点シェーダー
+VertexShader&& CreateVertexShader(const tchar* file)
+{
+	unsigned fSize{};
+	using fst =::std::fstream;
+	::std::basic_ifstream<unsigned char> iFile{file, fst::binary|fst::in};
+	iFile.seekg(0, fst::end);
+	fSize =iFile.tellg();
+	iFile.clear();
+	iFile.seekg(0, fst::beg);
+	fSize -=iFile.tellg();
+	std::unique_ptr<unsigned char[]> buf =std::make_unique<unsigned char[]>(fSize);
+	iFile.read(buf.get(), fSize);
+	iFile.close();
+	//シェーダーコードデータの取得を関数化
+
+	//ここから入力レイアウトと頂点シェーダーを作成
+
+
+	//頂点シェーダコードのコンパイル
+	HRESULT hr;
+	if(pShaderMacros) {D3DX11CompileFromFile(shaderFile, &pShaderMacros[0].m_ShaderMacro, NULL, functionName, "vs_5_0", compileOption, NULL, NULL, &pBlob, NULL, &hr);}
+	else {D3DX11CompileFromFile(shaderFile, NULL, NULL, functionName, "vs_5_0", compileOption, NULL, NULL, &pBlob, NULL, &hr);}
+	if(FAILED(hr))
+	{
+		FatalError::GetInstance().Outbreak(L"頂点シェーダの作成に失敗しました\nファイルが破損している可能性があります");
+		return false;
+	}
+	//頂点シェーダの作成
+	if(FAILED(master.m_pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &m_pVertexShader)))
+	{
+		//開放してから終了
+		SAFE_RELEASE(pBlob);
+		FatalError::GetInstance().Outbreak(L"頂点シェーダの作成に失敗しました\nファイルが破損している可能性があります");
+		return false;
+	}
+
+	//入力レイアウトオブジェクトの作成
+	if(!pInputElements) {return false;}
+	if(FAILED(master.m_pDevice->CreateInputLayout(&pInputElements[0].m_IE, numElements, pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &m_pInputLayout)))
+	{
+		//開放してから終了
+		SAFE_RELEASE(pBlob);
+		FatalError::GetInstance().Outbreak(L"入力レイアウトオブジェクトの作成に失敗しました\n処理を継続できません");
+		return false;
+	}
+	//頂点シェーダオブジェクトの作成終了
+	SAFE_RELEASE(pBlob);
+}
 
 
 

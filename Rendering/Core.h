@@ -54,16 +54,12 @@ public:
 // スワップチェインのカスタム用記述
 struct SwapChainDesc : public DXGI_SWAP_CHAIN_DESC
 {
-public:
-
 };
 
 
 
 // =================== インターフェイスファクトリ関数 ===============================
 
-namespace factory
-{
 // スワップチェイン
 SwapChain&& CreateSwapChain(const SwapChainDesc& desc);
 // 頂点シェーダー
@@ -92,4 +88,3 @@ ShaderResourceView&& CreateShaderResourceView();
 Texture2D&& CreateTexture2D();
 
 
-}//factory

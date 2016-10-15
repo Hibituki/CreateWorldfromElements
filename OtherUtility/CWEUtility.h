@@ -58,7 +58,8 @@ constexpr auto ToUType(tEnum enumerator) noexcept
 
 typedef unsigned BitFlag;
 
-typedef std::basic_string<TCHAR, std::char_traits<TCHAR>, std::allocator<TCHAR> > tstring;
+typedef TCHAR tchar;
+typedef std::basic_string<tchar, std::char_traits<tchar>, std::allocator<tchar> > tstring;
 
 template<class tInterface>
 using Interface_ptr =std::unique_ptr<tInterface, decltype((&deleter::Release<tInterface>))>;

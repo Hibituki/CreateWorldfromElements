@@ -50,30 +50,20 @@ enum class DepthStencilStatus
 typedef DXGI_FORMAT Format;
 
 
-// 入力エレメント
-struct IAInputElement
+// 入力エレメント記述
+struct InputElementDesc : public D3D11_INPUT_ELEMENT_DESC
 {
-public:
-	IAInputElement(const char* semanticName, unsigned semanticIndex, Format format, unsigned inputSlot, unsigned alignedByteOffset, InputClassification inputSlotClass, unsigned instanceDataStepRate);
-
-	void Set(const std::string& semanticName, unsigned semanticIndex, Format format, unsigned inputSlot, unsigned alignedByteOffset, InputClassification inputSlotClass, unsigned instanceDataStepRate);
-
-private:
-	D3D11_INPUT_ELEMENT_DESC m_IE;
 };
 
 
 // 頂点シェーダオブジェクト
-struct VertexShader
+struct VertexShader : public D3DWrapper<ID3D11InputLayout>, public D3DWrapper<ID3D11VertexShader>
 {
 public:
-	// 入力レイアウト&頂点シェーダオブジェクトの作成
-	template<unsigned numElements>
-	bool Create(const tstring& shaderFile, const std::string& functionName, const IAInputElement (&pInputElements)[numElements]);
+	using IL =D3DWrapper<ID3D11InputLayout>;
+	using VS =D3DWrapper<ID3D11VertexShader>;
 
 private:
-	Interface_ptr<ID3D11InputLayout> m_pInputLayout;
-	Interface_ptr<ID3D11VertexShader> m_pVertexShader;
 
 };
 
