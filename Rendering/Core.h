@@ -31,6 +31,8 @@ private:
 };
 
 
+// コア部分の初期化
+bool InitCore();
 // デバイスがロストしたか
 bool DeviceLost();
 
@@ -63,7 +65,7 @@ struct SwapChainDesc : public DXGI_SWAP_CHAIN_DESC
 // スワップチェイン
 SwapChain&& CreateSwapChain(const SwapChainDesc& desc);
 // 頂点シェーダー
-VertexShader&& CreateVertexShader();
+VertexShader&& CreateVertexShader(const tchar* file, const InputElementDesc* pDescs, size_t numDescs);
 // ジオメトリシェーダー
 GeometryShader&& CreateGeometryShader();
 // ピクセルシェーダー

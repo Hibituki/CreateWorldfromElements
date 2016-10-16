@@ -63,6 +63,8 @@ public:
 	using IL =D3DWrapper<ID3D11InputLayout>;
 	using VS =D3DWrapper<ID3D11VertexShader>;
 
+	operator bool() const {return IL::operator bool() && VS::operator bool();}
+
 private:
 
 };
